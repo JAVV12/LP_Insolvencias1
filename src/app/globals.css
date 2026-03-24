@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    body {
+        @apply bg-brand-black text-white font-display antialiased;
+        min-height: max(884px, 100dvh);
+    }
+    h1, h2, h3, h4 {
+        @apply font-display;
+    }
+}
+
+.glow-shadow {
+    box-shadow: 0 0 25px rgba(232, 193, 82, 0.15);
+}
+.glow-text {
+    text-shadow: 0 0 12px rgba(232, 193, 82, 0.3);
+}
+.glow-button {
+    box-shadow: 0 4px 20px rgba(232, 193, 82, 0.3);
+}
+.vsl-border {
+    border: 1px solid rgba(232, 193, 82, 0.2);
+}
+.luxury-gradient {
+    background: linear-gradient(180deg, #000000 0%, #222323 100%);
+}
+.sticky-countdown {
+    @apply sticky top-0 z-50 bg-primary py-3 px-4 flex flex-col justify-center items-center gap-1 shadow-lg overflow-hidden;
+}
+.card-grey {
+    @apply bg-brand-deep-grey border border-white/5;
+}

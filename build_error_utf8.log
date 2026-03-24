@@ -1,0 +1,130 @@
+﻿
+> insolvencias-web@0.1.0 build
+> next build
+
+Ôû▓ Next.js 16.2.1 (Turbopack)
+
+  Creating an optimized production build ...
+node.exe : 
+En C:\Program 
+Files\nodejs\npm.ps1: 
+29 Carácter: 3
++   & $NODE_EXE 
+$NPM_CLI_JS $args
++   ~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~
+    + CategoryInfo     
+         : NotSpecifi  
+  ed: (:String) [],    
+ RemoteException
+    + FullyQualifiedEr 
+   rorId : NativeComm  
+  andError
+ 
+> Build error occurred
+Error: Turbopack build 
+failed with 1 errors:
+./src/app/globals.css
+Error evaluating 
+Node.js code
+Error: It looks like 
+you're trying to use 
+`tailwindcss` directly 
+as a PostCSS plugin. 
+The PostCSS plugin has 
+moved to a separate 
+package, so to 
+continue using 
+Tailwind CSS with 
+PostCSS you'll need to 
+install 
+`@tailwindcss/postcss` 
+and update your 
+PostCSS configuration.
+    [at at (C:\Users\US
+UARIO\OneDrive\Document
+os\Alejandro 
+desarrollo LP\Insolvenc
+ias\insolvencias-web\no
+de_modules\tailwindcss\
+dist\lib.js:38:1643)]
+    at pluginFactory (t
+urbopack:///[turbopack-
+node]/transforms/postcs
+s.ts:56:14) [C:\Users\U
+SUARIO\OneDrive\Documen
+tos\Alejandro 
+desarrollo LP\Insolvenc
+ias\insolvencias-web\.n
+ext\build\chunks\[root-
+of-the-server]__0d-m0h0
+._.js:139:20]
+    [at <anonymous>]
+    at map (turbopack:/
+//[turbopack-node]/tran
+sforms/postcss.ts:43:33
+) [C:\Users\USUARIO\One
+Drive\Documentos\Alejan
+dro desarrollo LP\Insol
+vencias\insolvencias-we
+b\.next\build\chunks\[r
+oot-of-the-server]__0d-
+m0h0._.js:129:35]
+    at init (turbopack:
+///[turbopack-node]/chi
+ld_process/evaluate.ts:
+74:20) [C:\Users\USUARI
+O\OneDrive\Documentos\A
+lejandro desarrollo LP\
+Insolvencias\insolvenci
+as-web\.next\build\chun
+ks\[root-of-the-server]
+__0ubbtyl._.js:429:26]
+    [at process.process
+TicksAndRejections (nod
+e:internal/process/task
+_queues:105:5)]
+
+Import trace:
+  Client Component 
+Browser:
+    
+./src/app/globals.css 
+[Client Component 
+Browser]
+    
+./src/app/layout.tsx 
+[Server Component]
+
+
+    at pluginFactory (t
+urbopack:///[turbopack-
+node]/transforms/postcs
+s.ts:56:14) [C:\Users\U
+SUARIO\OneDrive\Documen
+tos\Alejandro 
+desarrollo LP\Insolvenc
+ias\insolvencias-web\.n
+ext\build\chunks\[root-
+of-the-server]__0d-m0h0
+._.js:139:20])
+    at map (turbopack:/
+//[turbopack-node]/tran
+sforms/postcss.ts:43:33
+) [C:\Users\USUARIO\One
+Drive\Documentos\Alejan
+dro desarrollo LP\Insol
+vencias\insolvencias-we
+b\.next\build\chunks\[r
+oot-of-the-server]__0d-
+m0h0._.js:129:35])
+    at init (turbopack:
+///[turbopack-node]/chi
+ld_process/evaluate.ts:
+74:20) [C:\Users\USUARI
+O\OneDrive\Documentos\A
+lejandro desarrollo LP\
+Insolvencias\insolvenci
+as-web\.next\build\chun
+ks\[root-of-the-server]
+__0ubbtyl._.js:429:26])
