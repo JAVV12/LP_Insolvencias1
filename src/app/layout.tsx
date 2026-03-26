@@ -9,11 +9,25 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
-  title: "Insolvencia - Perfil Profesional Andrés Toro",
-  description: "Recupera tu vida y borra tus deudas legalmente con la Ley de Insolvencia. Frena embargos y obtén un reinicio financiero.",
+  metadataBase: new URL('https://www.defensalegalfinanciera.com'),
+  title: "Insolvencia - Defensa Legal Financiera con Andrés Toro",
+
+  description: "Recupera tu vida y borra tus deudas legalmente con la Ley de Insolvencia en Colombia. Frena embargos, remates y obtén un reinicio financiero real.",
+  keywords: ["Ley de Insolvencia", "borrar deudas", "Andrés Toro abogado", "frenar embargos Colombia", "reinicio financiero"],
+  alternates: {
+    canonical: "https://www.defensalegalfinanciera.com",
+  },
   openGraph: {
     title: "Insolvencia - Defensa Legal Financiera",
-    description: "Recupera tu vida y borra tus deudas legalmente con la Ley de Insolvencia. Frena embargos y obtén un reinicio financiero.",
+    description: "Recupera tu vida y borra tus deudas legalmente con la Ley de Insolvencia en Colombia. Frena embargos y obtén un reinicio financiero.",
+    images: [
+      {
+        url: "/images/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Defensa Legal Financiera - Andrés Toro",
+      },
+    ],
     type: "website",
     locale: "es_CO",
     siteName: "Defensa Legal Insolvencia",
@@ -21,9 +35,11 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Ley de Insolvencia - Andrés Toro",
-    description: "Frena embargos y obtén un reinicio financiero legalmente.",
+    description: "Frena embargos y obtén un reinicio financiero legalmente en Colombia.",
+    images: ["/images/og-image.jpg"],
   }
 };
+
 
 export default function RootLayout({
   children,
