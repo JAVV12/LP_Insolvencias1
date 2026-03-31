@@ -37,8 +37,11 @@ export default function CTA() {
                         <p className="text-white/60 text-[10px] mt-4 font-medium uppercase tracking-widest">OFERTA POR TIEMPO LIMITADO</p>
                     </div>
 
-                    <motion.button
-                        className="w-full bg-primary text-black font-black py-6 rounded-2xl uppercase tracking-[0.1em] text-base relative overflow-hidden z-10"
+                    <motion.a
+                        href="https://wa.link/fspjz8"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full bg-primary text-black font-black py-6 rounded-2xl uppercase tracking-[0.1em] text-base relative overflow-hidden z-10 flex items-center justify-center"
                         whileHover={{ scale: 1.02, boxShadow: "0px 15px 40px rgba(232, 193, 82, 0.6)" }}
                         whileTap={{ scale: 0.95 }}
                         animate={{
@@ -56,7 +59,7 @@ export default function CTA() {
                             AGENDAR ASESORÍA
                             <motion.span className="material-symbols-outlined text-xl" animate={{ x: [0, 5, 0] }} transition={{ duration: 1, repeat: Infinity }}>bolt</motion.span>
                         </span>
-                    </motion.button>
+                    </motion.a>
                 </div>
 
                 <motion.div

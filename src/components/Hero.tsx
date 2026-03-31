@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, Variants } from "framer-motion";
 import Image from "next/image";
 
@@ -11,6 +11,28 @@ const fadeUp: Variants = {
 
 export default function Hero() {
     const [isVslPlaying, setIsVslPlaying] = useState(false);
+    const [isPlaying, setIsPlaying] = useState(true);
+    const [progress, setProgress] = useState(0);
+    const videoRef = useRef<HTMLVideoElement>(null);
+
+    const handleTimeUpdate = () => {
+        if (videoRef.current) {
+            const percentage = (videoRef.current.currentTime / videoRef.current.duration) * 100;
+            setProgress(percentage);
+        }
+    };
+
+    const togglePlay = () => {
+        if (videoRef.current) {
+            if (videoRef.current.paused) {
+                videoRef.current.play();
+                setIsPlaying(true);
+            } else {
+                videoRef.current.pause();
+                setIsPlaying(false);
+            }
+        }
+    };
 
     return (
         <motion.header
@@ -66,21 +88,46 @@ export default function Hero() {
                         />
                     </>
                 ) : (
-                    <div className="absolute inset-0 bg-black z-20 flex items-center justify-center">
+                    <div className="absolute inset-0 bg-black z-20 flex items-center justify-center group cursor-pointer" onClick={togglePlay}>
                         <video
+                            ref={videoRef}
                             src="/videos/vsl-optimized.mp4"
                             poster="/videos/poster.jpg"
                             autoPlay
-                            controls
                             playsInline
-                            style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                            onTimeUpdate={handleTimeUpdate}
+                            onContextMenu={(e) => e.preventDefault()}
+                            className="w-full h-full object-cover"
                         />
+                        {/* Custom Progress Bar */}
+                        <div className="absolute bottom-0 left-0 w-full h-1.5 bg-white/10 overflow-hidden pointer-events-none">
+                            <motion.div
+                                className="h-full bg-primary glow-button"
+                                style={{ width: `${progress}%` }}
+                                transition={{ type: "spring", bounce: 0, duration: 0.1 }}
+                            />
+                        </div>
+
+                        {/* Overlay Controls (visible on hover) */}
+                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none transition-opacity duration-300 opacity-0 group-hover:opacity-100">
+                            <motion.div
+                                className="size-16 rounded-full bg-black/40 backdrop-blur-sm border border-white/10 flex items-center justify-center"
+                                animate={{ scale: isPlaying ? 0.8 : 1 }}
+                            >
+                                <span className="material-symbols-outlined text-white text-4xl">
+                                    {isPlaying ? 'pause' : 'play_arrow'}
+                                </span>
+                            </motion.div>
+                        </div>
                     </div>
                 )}
             </motion.div>
 
-            <motion.button
-                className="w-full bg-primary text-black font-black py-5 rounded-xl uppercase tracking-widest text-sm relative overflow-hidden"
+            <motion.a
+                href="https://wa.link/fspjz8"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full bg-primary text-black font-black py-5 rounded-xl uppercase tracking-widest text-sm relative overflow-hidden flex items-center justify-center"
                 whileHover={{ scale: 1.02, boxShadow: "0px 10px 30px rgba(232, 193, 82, 0.5)" }}
                 whileTap={{ scale: 0.95 }}
                 animate={{ y: [0, -3, 0] }}
@@ -102,7 +149,7 @@ export default function Hero() {
                         arrow_forward
                     </motion.span>
                 </span>
-            </motion.button>
+            </motion.a>
         </motion.header>
     );
 }
