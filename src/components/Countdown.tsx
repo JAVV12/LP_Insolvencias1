@@ -30,7 +30,11 @@ export default function Countdown() {
     return (
         <div className="sticky-countdown z-50">
             <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-black text-sm">timer</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-black shrink-0">
+                    <line x1="10" y1="2" x2="14" y2="2" />
+                    <line x1="12" y1="14" x2="15" y2="11" />
+                    <circle cx="12" cy="14" r="8" />
+                </svg>
                 <p className="text-[10px] font-black tracking-[0.2em] text-black uppercase">
                     {timeLeft > 0 ? "ASESORÍA GRATUITA POR TIEMPO LIMITADO:" : "OFERTA FINALIZADA —"}
                 </p>
