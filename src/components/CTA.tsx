@@ -1,13 +1,30 @@
 "use client";
 
 import { motion, Variants } from "framer-motion";
+import { useEffect, useState } from "react";
 
 const fadeUp: Variants = {
     hidden: { opacity: 0, y: 40 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } }
 };
 
+function useCountdownActive() {
+    const [isActive, setIsActive] = useState(true);
+    useEffect(() => {
+        const stored = localStorage.getItem("countdown-start");
+        const start = stored ? parseInt(stored) : Date.now();
+        if (!stored) localStorage.setItem("countdown-start", String(start));
+        const duration = 10 * 60 * 1000;
+        const check = () => setIsActive(Date.now() - start < duration);
+        check();
+        const interval = setInterval(check, 1000);
+        return () => clearInterval(interval);
+    }, []);
+    return isActive;
+}
+
 export default function CTA() {
+    const isActive = useCountdownActive();
     return (
         <motion.section
             className="px-6 py-20 bg-brand-deep-grey border-t border-white/5"
@@ -29,12 +46,25 @@ export default function CTA() {
                         Cada día que pasa los intereses te hunden más. Toma acción hoy mismo y asegura tu espacio para la consulta especializada.
                     </p>
                     <div className="flex flex-col items-center gap-1 mb-8 relative z-10">
-                        <span className="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1">VALOR CONSULTA LEGAL: $150.000 COP</span>
-                        <span className="text-primary text-5xl font-black glow-text leading-tight uppercase flex items-center justify-center gap-2">
-                            50.000 COP
-                            <motion.span className="material-symbols-outlined text-3xl" animate={{ opacity: [0, 1, 0] }} transition={{ duration: 1, repeat: Infinity }}>local_fire_department</motion.span>
+                        <span className="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1 line-through decoration-primary/60">
+                            VALOR CONSULTA LEGAL: $150.000 COP
                         </span>
-                        <p className="text-white/60 text-[10px] mt-4 font-medium uppercase tracking-widest">OFERTA POR TIEMPO LIMITADO</p>
+                        {isActive ? (
+                            <>
+                                <span className="text-primary text-5xl font-black glow-text leading-tight uppercase flex items-center justify-center gap-2">
+                                    GRATIS
+                                    <motion.span className="material-symbols-outlined text-3xl" animate={{ opacity: [0, 1, 0] }} transition={{ duration: 1, repeat: Infinity }}>local_fire_department</motion.span>
+                                </span>
+                                <p className="text-white/60 text-[10px] mt-4 font-medium uppercase tracking-widest">GRATIS MIENTRAS EL CONTADOR ESTÉ ACTIVO</p>
+                            </>
+                        ) : (
+                            <>
+                                <span className="text-primary text-5xl font-black glow-text leading-tight uppercase">
+                                    $50.000 COP
+                                </span>
+                                <p className="text-white/60 text-[10px] mt-4 font-medium uppercase tracking-widest">OFERTA ESPECIAL</p>
+                            </>
+                        )}
                     </div>
 
                     <motion.a
@@ -56,7 +86,7 @@ export default function CTA() {
                             transition={{ duration: 1.5, repeat: Infinity, repeatDelay: 2 }}
                         />
                         <span className="relative z-10 w-full flex items-center justify-center gap-2">
-                            AGENDAR ASESORÍA
+                            {isActive ? "AGENDAR ASESORÍA GRATUITA" : "AGENDAR ASESORÍA"}
                             <motion.span className="material-symbols-outlined text-xl" animate={{ x: [0, 5, 0] }} transition={{ duration: 1, repeat: Infinity }}>bolt</motion.span>
                         </span>
                     </motion.a>
