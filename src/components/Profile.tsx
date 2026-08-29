@@ -32,41 +32,47 @@ export default function Profile() {
                 </motion.div>
 
                 <div className="flex flex-col items-center gap-10">
-                    <motion.div variants={fadeUp} className="relative group">
+
+                    {/* Imagen de firma — landscape card */}
+                    <motion.div variants={fadeUp} className="relative w-full group">
                         <motion.div
-                            className="absolute inset-0 bg-primary/20 rounded-full blur-3xl group-hover:bg-primary/40 transition-colors duration-700"
-                            animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0.8, 0.5] }}
-                            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                            className="absolute inset-0 bg-primary/10 rounded-2xl blur-3xl group-hover:bg-primary/20 transition-colors duration-700"
+                            animate={{ scale: [1, 1.05, 1], opacity: [0.4, 0.7, 0.4] }}
+                            transition={{ duration: 5, repeat: 2, ease: "easeInOut" }}
                         ></motion.div>
-                        <div className="relative size-64 rounded-full overflow-hidden border-4 border-primary/20 shadow-2xl">
+                        <div className="relative w-full aspect-[16/9] lg:aspect-[21/9] rounded-2xl overflow-hidden border border-primary/20 shadow-2xl">
                             <Image
-                                src="/images/perfil-andres.webp"
-                                alt="Andrés Toro - Abogado especialista en Insolvencia"
+                                src="/images/firma-toro-legal.webp"
+                                alt="Toro Legal Abogados — Firma jurídica especialista en Insolvencia Colombia"
                                 fill
-                                sizes="(max-width: 768px) 256px, 256px"
-                                className="object-cover object-top grayscale-[0.4] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
+                                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 896px, 1024px"
+                                className="object-cover object-center grayscale-[0.2] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
+                                priority={false}
                             />
+                            {/* Badge verificado */}
+                            <motion.div
+                                className="absolute bottom-4 right-4 bg-primary text-black px-4 py-2 rounded-full shadow-lg flex items-center gap-2"
+                                initial={{ scale: 0, opacity: 0 }}
+                                whileInView={{ scale: 1, opacity: 1 }}
+                                viewport={{ once: true }}
+                                transition={{ type: "spring", bounce: 0.5, delay: 0.5 }}
+                            >
+                                <span className="material-symbols-outlined font-black text-base">verified</span>
+                                <span className="text-xs font-black uppercase tracking-widest">Firma Certificada</span>
+                            </motion.div>
                         </div>
-                        <motion.div
-                            className="absolute -bottom-2 -right-2 bg-primary text-black p-3 rounded-full shadow-lg"
-                            initial={{ scale: 0 }}
-                            whileInView={{ scale: 1 }}
-                            viewport={{ once: true }}
-                            transition={{ type: "spring", bounce: 0.5, delay: 0.5 }}
-                        >
-                            <span className="material-symbols-outlined font-black text-xl">verified</span>
-                        </motion.div>
                     </motion.div>
 
-                    <motion.div variants={fadeUp} className="text-center space-y-6">
-                        <h3 className="text-primary text-3xl font-extrabold tracking-tight relative inline-block">Andrés Toro - Abogado
+                    {/* Nombre y descripción */}
+                    <motion.div variants={fadeUp} className="text-center space-y-6 w-full">
+                        <h3 className="text-primary text-3xl lg:text-4xl font-extrabold tracking-tight relative inline-block">TORO LEGAL
                             <motion.span className="absolute -bottom-1 left-0 w-full h-0.5 bg-primary/30" initial={{ scaleX: 0 }} whileInView={{ scaleX: 1 }} transition={{ delay: 0.8 }}></motion.span>
                         </h3>
-                        <div className="space-y-4 text-white text-base leading-relaxed font-light px-4 text-justify">
-                            <p>Egresado de la <span className="text-primary font-bold">Universidad de Manizales</span>, con experiencia en el sector público y privado en diferentes áreas del derecho. Cuenta con trayectoria profesional en el sector público, habiendo prestado sus servicios en la <span className="text-primary font-bold">Gobernación de Caldas</span> (2021) y en la <span className="text-primary font-bold">Alcaldía de Neira</span>, Caldas (2024), donde fortaleció su experiencia en gestión jurídica y procesos administrativos.</p>
-                            <p>En el sector privado, se ha desempeñado en las áreas de <span className="text-primary font-bold">Derecho Civil</span>, <span className="text-primary font-bold">Derecho de Familia</span> y <span className="text-primary font-bold">Derecho Comercial</span>, brindando asesoría y acompañamiento legal a personas y empresas.</p>
-                            <p>Además, cuenta con <span className="text-primary font-bold">más de 5 años de experiencia</span> acompañando <span className="text-primary font-bold">procesos de insolvencia</span>, donde ha asesorado a múltiples personas en la reorganización de sus deudas y la recuperación de su estabilidad financiera, viendo de primera mano los resultados positivos que este proceso puede generar en la vida de sus clientes.</p>
-                            <p>Su enfoque profesional se basa en la transparencia, el acompañamiento cercano y la búsqueda de soluciones legales para quienes necesitan una <span className="text-primary font-bold">nueva oportunidad financiera</span>.</p>
+                        <div className="space-y-4 text-white text-base leading-relaxed font-light px-2 lg:px-0 text-justify">
+                            <p>Somos una <span className="text-primary font-bold">firma jurídica de élite</span>, integrada por un equipo multidisciplinario de especialistas con amplia trayectoria en el sector público y privado. Nuestra firma ha consolidado su prestigio a través de la representación legal en entidades como la <span className="text-primary font-bold">Gobernación de Caldas</span> y diversas alcaldías municipales, fortaleciendo una gestión jurídica de alto nivel.</p>
+                            <p>En <span className="text-primary font-bold">TORO LEGAL ABOGADOS S.A.S</span>, contamos con departamentos especializados en <span className="text-primary font-bold">Derecho Civil</span>, <span className="text-primary font-bold">Derecho de Familia</span> y <span className="text-primary font-bold">Derecho Comercial</span>, brindando un respaldo integral a personas y empresas que buscan seguridad jurídica.</p>
+                            <p>Nuestra firma cuenta con <span className="text-primary font-bold">más de 5 años de experiencia</span> liderando <span className="text-primary font-bold">procesos de insolvencia a nivel nacional</span>. Hemos asesorado a cientos de clientes en la reorganización de sus deudas, logrando la recuperación de su estabilidad financiera y transformando realidades económicas complejas en nuevas oportunidades.</p>
+                            <p>Nuestro enfoque institucional se basa en la <span className="text-primary font-bold">transparencia absoluta</span>, el acompañamiento corporativo cercano y la ejecución de estrategias legales precisas para quienes necesitan una <span className="text-primary font-bold">nueva oportunidad financiera</span>.</p>
                         </div>
                     </motion.div>
                 </div>
