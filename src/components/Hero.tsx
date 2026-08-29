@@ -42,7 +42,17 @@ export default function Hero() {
             viewport={{ once: true }}
             variants={fadeUp}
         >
-            <div className="mb-10 inline-block">
+            <motion.div 
+                className="flex justify-center mb-8"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+            >
+                <div className="relative w-32 h-32 md:w-40 md:h-40">
+                    <Image src="/images/logo.webp" alt="Toro Legal Logo" fill className="object-contain drop-shadow-2xl" priority />
+                </div>
+            </motion.div>
+            <div className="mb-8 inline-block">
                 <p className="text-white text-xs font-black uppercase tracking-[0.4em] border-b border-primary/40 pb-2">DEFENSA LEGAL FINANCIERA</p>
             </div>
             <div className="max-w-[95%] mx-auto mb-8 relative">
