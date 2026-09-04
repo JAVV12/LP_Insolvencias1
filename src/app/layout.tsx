@@ -10,33 +10,27 @@ const manrope = Manrope({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.defensalegalfinanciera.com'),
-  title: "Insolvencia - Defensa Legal Financiera con Andrés Toro",
-
+  title: "Insolvencia - Defensa Legal Financiera con Toro Legal",
   description: "Recupera tu vida y borra tus deudas legalmente con la Ley de Insolvencia en Colombia. Frena embargos, remates y obtén un reinicio financiero real.",
-  keywords: ["Ley de Insolvencia", "borrar deudas", "Andrés Toro abogado", "frenar embargos Colombia", "reinicio financiero"],
+  keywords: ["Ley de Insolvencia", "borrar deudas", "Toro Legal", "abogados insolvencia", "frenar embargos Colombia", "reinicio financiero"],
   alternates: {
     canonical: "https://www.defensalegalfinanciera.com",
   },
+  // La imagen de previsualización sale de src/app/opengraph-image.jpg y
+  // src/app/twitter-image.jpg (convención de archivo de Next, que tiene
+  // prioridad sobre este objeto). Se regenera con `npm run og`.
   openGraph: {
     title: "Insolvencia - Defensa Legal Financiera",
     description: "Recupera tu vida y borra tus deudas legalmente con la Ley de Insolvencia en Colombia. Frena embargos y obtén un reinicio financiero.",
-    images: [
-      {
-        url: "/images/og-image.jpg",
-        width: 1200,
-        height: 630,
-        alt: "Defensa Legal Financiera - Andrés Toro",
-      },
-    ],
+    url: "https://www.defensalegalfinanciera.com",
     type: "website",
     locale: "es_CO",
     siteName: "Defensa Legal Insolvencia",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Ley de Insolvencia - Andrés Toro",
+    title: "Ley de Insolvencia - Toro Legal",
     description: "Frena embargos y obtén un reinicio financiero legalmente en Colombia.",
-    images: ["/images/og-image.jpg"],
   }
 };
 
@@ -49,9 +43,18 @@ export default function RootLayout({
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "LegalService",
-    "name": "Andrés Toro - Abogado Insolvencia",
+    "name": "Toro Legal - Abogados de Insolvencia",
+    "legalName": "Toro Legal Abogados S.A.S.",
+    "taxID": "902066320-8",
     "description": "Servicios legales especializados en la Ley de Insolvencia en Colombia. Frena embargos y obtén asesoría financiera y jurídica.",
     "url": "https://www.defensalegalfinanciera.com",
+    "logo": "https://www.defensalegalfinanciera.com/images/logo.webp",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Pereira",
+      "addressRegion": "Risaralda",
+      "addressCountry": "CO",
+    },
     "areaServed": "CO",
     "knowsAbout": ["Ley de Insolvencia", "Derecho Civil", "Derecho de Familia", "Derecho Comercial"],
   };

@@ -1,40 +1,14 @@
 "use client";
 
-import { motion, Variants } from "framer-motion";
-import { useEffect, useState } from "react";
-
-const fadeUp: Variants = {
-    hidden: { opacity: 0, y: 40 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } }
-};
-
-function useCountdownActive() {
-    const [isActive, setIsActive] = useState(true);
-    useEffect(() => {
-        const stored = localStorage.getItem("countdown-start");
-        const start = stored ? parseInt(stored) : Date.now();
-        if (!stored) localStorage.setItem("countdown-start", String(start));
-        const duration = 10 * 60 * 1000;
-        const check = () => setIsActive(Date.now() - start < duration);
-        check();
-        const interval = setInterval(check, 1000);
-        return () => clearInterval(interval);
-    }, []);
-    return isActive;
-}
+import { motion } from "framer-motion";
+import Reveal from "./Reveal";
+import { PROMO } from "@/lib/promo";
 
 export default function CTA() {
-    const isActive = useCountdownActive();
     return (
-        <motion.section
-            className="px-6 py-20 bg-brand-deep-grey border-t border-white/5"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeUp}
-        >
+        <section className="px-6 py-20 bg-brand-deep-grey border-t border-white/5">
             <div className="text-center mb-10">
-                <div className="p-8 rounded-3xl bg-black border border-primary/30 text-center relative overflow-hidden mb-12 shadow-2xl">
+                <Reveal className="p-6 sm:p-8 rounded-3xl bg-black border border-primary/30 text-center relative overflow-hidden mb-12 shadow-2xl">
                     <motion.div
                         className="absolute -top-10 -right-10 size-32 bg-primary/20 rounded-full blur-3xl"
                         animate={{ scale: [1, 1.5, 1], opacity: [0.3, 0.6, 0.3] }}
@@ -46,32 +20,21 @@ export default function CTA() {
                         Cada día que pasa los intereses te hunden más. Toma acción hoy mismo y asegura tu espacio para la consulta especializada.
                     </p>
                     <div className="flex flex-col items-center gap-1 mb-8 relative z-10">
-                        <span className="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1 line-through decoration-primary/60">
-                            VALOR CONSULTA LEGAL: $150.000 COP
+                        {/* «Sin costo» a text-4xl para que quepa en una línea a 375 px. */}
+                        <span className="text-primary text-4xl sm:text-5xl font-black glow-text leading-tight uppercase">
+                            Sin costo
                         </span>
-                        {isActive ? (
-                            <>
-                                <span className="text-primary text-5xl font-black glow-text leading-tight uppercase flex items-center justify-center gap-2">
-                                    GRATIS
-                                    <motion.span className="material-symbols-outlined text-3xl" animate={{ opacity: [0, 1, 0] }} transition={{ duration: 1, repeat: Infinity }}>local_fire_department</motion.span>
-                                </span>
-                                <p className="text-white/60 text-[10px] mt-4 font-medium uppercase tracking-widest">GRATIS MIENTRAS EL CONTADOR ESTÉ ACTIVO</p>
-                            </>
-                        ) : (
-                            <>
-                                <span className="text-primary text-5xl font-black glow-text leading-tight uppercase">
-                                    $50.000 COP
-                                </span>
-                                <p className="text-white/60 text-[10px] mt-4 font-medium uppercase tracking-widest">OFERTA ESPECIAL</p>
-                            </>
-                        )}
+                        <p className="text-white/60 text-[10px] mt-4 font-medium uppercase tracking-widest">
+                            Asesoría por este mes de {PROMO.mes}
+                        </p>
                     </div>
 
+                    {/* text-sm hasta sm: «AGENDAR MI ASESORÍA» parte en dos líneas a 320 px si va a text-base. */}
                     <motion.a
                         href="https://wa.link/fspjz8"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="w-full bg-primary text-black font-black py-6 rounded-2xl uppercase tracking-[0.1em] text-base relative overflow-hidden z-10 flex items-center justify-center"
+                        className="w-full bg-primary text-black font-black py-6 rounded-2xl uppercase tracking-[0.06em] sm:tracking-[0.1em] text-sm sm:text-base relative overflow-hidden z-10 flex items-center justify-center"
                         whileHover={{ scale: 1.02, boxShadow: "0px 15px 40px rgba(232, 193, 82, 0.6)" }}
                         whileTap={{ scale: 0.95 }}
                         animate={{
@@ -85,36 +48,31 @@ export default function CTA() {
                             animate={{ x: "200%" }}
                             transition={{ duration: 1.5, repeat: Infinity, repeatDelay: 2 }}
                         />
-                        <span className="relative z-10 w-full flex items-center justify-center gap-2">
-                            {isActive ? "AGENDAR ASESORÍA GRATUITA" : "AGENDAR ASESORÍA"}
-                            <motion.span className="material-symbols-outlined text-xl" animate={{ x: [0, 5, 0] }} transition={{ duration: 1, repeat: Infinity }}>bolt</motion.span>
-                        </span>
+                        <span className="relative z-10">AGENDAR MI ASESORÍA</span>
                     </motion.a>
-                </div>
+                </Reveal>
 
-                <motion.div
-                    className="p-8 rounded-3xl bg-black/40 border border-white/10 text-center relative overflow-hidden shadow-xl"
-                    whileHover={{ y: -5, borderColor: "rgba(255,255,255,0.2)" }}
-                >
-                    <div className="absolute -top-10 -right-10 size-32 bg-primary/5 rounded-full blur-3xl"></div>
-                    <motion.span
-                        className="material-symbols-outlined text-primary text-6xl mb-4"
-                        initial={{ rotate: -10 }}
-                        animate={{ rotate: 10 }}
-                        transition={{ duration: 0.5, repeat: Infinity, repeatType: "reverse" }}
+                <Reveal delay={60}>
+                    <motion.div
+                        className="p-8 rounded-3xl bg-black/40 border border-white/10 text-center relative overflow-hidden shadow-xl"
+                        whileHover={{ y: -5, borderColor: "rgba(255,255,255,0.2)" }}
                     >
-                        verified_user
-                    </motion.span>
-                    <h3 className="text-white text-2xl font-extrabold mb-4 uppercase relative z-10">GARANTÍA DE CONFIDENCIALIDAD</h3>
-                    <p className="text-white text-sm leading-relaxed font-light relative z-10">
-                        Toda la información compartida está protegida por el <span className="text-primary font-bold">secreto profesional abogado-cliente</span>. Tu privacidad es nuestra máxima prioridad.
-                    </p>
-                </motion.div>
+                        <div className="absolute -top-10 -right-10 size-32 bg-primary/5 rounded-full blur-3xl"></div>
+                        <motion.span
+                            className="material-symbols-outlined text-primary text-6xl mb-4"
+                            initial={{ rotate: -10 }}
+                            animate={{ rotate: 10 }}
+                            transition={{ duration: 0.5, repeat: Infinity, repeatType: "reverse" }}
+                        >
+                            verified_user
+                        </motion.span>
+                        <h3 className="text-white text-2xl font-extrabold mb-4 uppercase relative z-10">GARANTÍA DE CONFIDENCIALIDAD</h3>
+                        <p className="text-white text-sm leading-relaxed font-light relative z-10">
+                            Toda la información compartida está protegida por el <span className="text-primary font-bold">secreto profesional abogado-cliente</span>. Tu privacidad es nuestra máxima prioridad.
+                        </p>
+                    </motion.div>
+                </Reveal>
             </div>
-
-            <div className="mt-20 text-center pb-12">
-                <p className="text-slate-600 text-[10px] font-bold uppercase tracking-[0.2em]">© 2026 DEFENSA LEGAL INSOLVENCIA • JAVV CORP</p>
-            </div>
-        </motion.section>
+        </section>
     );
 }

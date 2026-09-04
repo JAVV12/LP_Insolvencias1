@@ -46,3 +46,7 @@ videos/*
 !videos/*.js
 !videos/*.ts
 public/_next-video
+
+
+# Claude Code (herramienta de desarrollo, no parte de la app)
+.claude/

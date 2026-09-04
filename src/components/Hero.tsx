@@ -1,17 +1,13 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
-import { motion, Variants } from "framer-motion";
+import { useState, useRef, useEffect, useCallback } from "react";
+import { motion } from "framer-motion";
 import Image from "next/image";
 
-const fadeUp: Variants = {
-    hidden: { opacity: 0, y: 40 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } }
-};
-
 export default function Hero() {
-    const [isVslPlaying, setIsVslPlaying] = useState(false);
-    const [isPlaying, setIsPlaying] = useState(true);
+    const [started, setStarted] = useState(false);
+    const [muted, setMuted] = useState(false);
+    const [isPlaying, setIsPlaying] = useState(false);
     const [progress, setProgress] = useState(0);
     const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -22,36 +18,67 @@ export default function Hero() {
         }
     };
 
+    /**
+     * Arranca la reproducción.
+     *
+     * El navegador solo permite sonido si `play()` se llama de forma síncrona
+     * dentro de un gesto real del usuario (un clic): por eso el botón de play
+     * llama esto directamente en su `onClick`, sin pasar por un cambio de
+     * estado que remonte el <video> — eso era lo que obligaba a pulsar play
+     * dos veces, porque el intento de reproducción automática ya no ocurría
+     * dentro del gesto de clic original y el navegador lo bloqueaba.
+     *
+     * El scroll no cuenta como gesto de usuario, así que ese camino arranca en
+     * silencio; el botón de sonido dentro del reproductor deja activarlo.
+     */
+    const iniciarReproduccion = useCallback((conSonido: boolean) => {
+        const video = videoRef.current;
+        if (!video) return;
+        video.muted = !conSonido;
+        setMuted(!conSonido);
+        setStarted(true);
+        video.play().catch(() => {
+            // Si el navegador aun así lo bloquea, el usuario puede pulsar
+            // sobre el video para intentarlo de nuevo.
+        });
+    }, []);
+
+    // Arranca el video en cuanto el visitante empieza a desplazarse, para que
+    // ver la VSL no dependa de que encuentre y pulse el botón de play.
+    useEffect(() => {
+        if (started) return;
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+        const alPrimerScroll = () => iniciarReproduccion(false);
+        window.addEventListener("scroll", alPrimerScroll, { once: true, passive: true });
+        return () => window.removeEventListener("scroll", alPrimerScroll);
+    }, [started, iniciarReproduccion]);
+
     const togglePlay = () => {
-        if (videoRef.current) {
-            if (videoRef.current.paused) {
-                videoRef.current.play();
-                setIsPlaying(true);
-            } else {
-                videoRef.current.pause();
-                setIsPlaying(false);
-            }
+        const video = videoRef.current;
+        if (!video) return;
+        if (video.paused) {
+            video.play().catch(() => {});
+        } else {
+            video.pause();
         }
     };
 
+    const alternarSonido = () => {
+        const video = videoRef.current;
+        if (!video) return;
+        video.muted = !video.muted;
+        setMuted(video.muted);
+    };
+
+    // El hero no lleva animación de entrada a propósito: es lo primero que se
+    // pinta, y cualquier `initial` de Framer Motion se serializa como
+    // `opacity: 0` en el HTML del servidor, retrasando el LCP.
     return (
-        <motion.header
-            className="pt-20 pb-16 px-6 text-center overflow-hidden relative"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeUp}
-        >
-            <motion.div 
-                className="absolute top-4 left-4 md:top-6 md:left-8 z-20"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-            >
-                <div className="relative w-20 h-20 md:w-28 md:h-28">
-                    <Image src="/images/logo.webp" alt="Toro Legal Logo" fill className="object-contain drop-shadow-2xl" priority />
-                </div>
-            </motion.div>
+        <header className="pt-10 md:pt-14 pb-16 px-6 text-center overflow-hidden relative">
+            <div className="relative w-20 h-20 md:w-28 md:h-28 mx-auto mb-6">
+                <Image src="/images/logo.webp" alt="Toro Legal Logo" fill className="object-contain drop-shadow-2xl" priority />
+            </div>
             <div className="mb-8 inline-block">
                 <p className="text-white text-xs font-black uppercase tracking-[0.4em] border-b border-primary/40 pb-2">DEFENSA LEGAL FINANCIERA</p>
             </div>
@@ -69,47 +96,45 @@ export default function Hero() {
                 No tienes que vivir escondiéndote de los bancos. Existe un camino jurídico para frenar embargos y obtener el reinicio financiero que mereces.
             </p>
 
-            <motion.div
-                className="relative w-full aspect-video rounded-2xl overflow-hidden mb-10 vsl-border shadow-2xl bg-brand-deep-grey"
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 1, delay: 0.2 }}
-            >
-                {!isVslPlaying ? (
-                    <>
-                        <div className="absolute inset-0 bg-black/60 flex items-center justify-center z-10">
-                            <motion.div
-                                onClick={() => setIsVslPlaying(true)}
-                                className="size-20 bg-primary/10 backdrop-blur-sm rounded-full flex items-center justify-center border border-primary/40 cursor-pointer group"
-                                whileHover={{ scale: 1.1, backgroundColor: "rgba(232, 193, 82, 0.2)" }}
-                                whileTap={{ scale: 0.9 }}
-                                animate={{ boxShadow: ["0px 0px 0px rgba(232,193,82,0)", "0px 0px 20px rgba(232,193,82,0.4)", "0px 0px 0px rgba(232,193,82,0)"] }}
-                                transition={{ boxShadow: { duration: 2, repeat: Infinity } }}
-                            >
-                                <span className="material-symbols-outlined text-primary text-5xl translate-x-1 group-hover:drop-shadow-[0_0_8px_rgba(232,193,82,0.8)] transition-all">play_arrow</span>
-                            </motion.div>
-                        </div>
-                        <Image
-                            alt="Legal Consultation Video"
-                            className="w-full h-full object-cover opacity-50 transition-opacity duration-1000"
-                            src="/videos/poster.jpg"
-                            fill
-                            priority
-                        />
-                    </>
+            <div className="relative w-full aspect-video rounded-2xl overflow-hidden mb-10 vsl-border shadow-2xl bg-brand-deep-grey group">
+                {/*
+                    El <video> está siempre montado, incluso antes de arrancar.
+                    Así el ref ya existe cuando se pulsa play, y `.play()` se
+                    puede llamar de forma síncrona dentro del clic — condición
+                    que exige el navegador para permitir sonido.
+                */}
+                <video
+                    ref={videoRef}
+                    src="/videos/vsl-optimized.mp4"
+                    poster="/videos/poster.jpg"
+                    playsInline
+                    muted={muted}
+                    onClick={started ? togglePlay : undefined}
+                    onTimeUpdate={handleTimeUpdate}
+                    onPlay={() => setIsPlaying(true)}
+                    onPause={() => setIsPlaying(false)}
+                    onContextMenu={(e) => e.preventDefault()}
+                    className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${started ? "opacity-100 cursor-pointer" : "opacity-50"}`}
+                />
+
+                {!started ? (
+                    <div className="absolute inset-0 bg-black/60 flex items-center justify-center z-10">
+                        <motion.button
+                            type="button"
+                            onClick={() => iniciarReproduccion(true)}
+                            aria-label="Reproducir video"
+                            className="size-20 bg-primary/10 backdrop-blur-sm rounded-full flex items-center justify-center border border-primary/40 cursor-pointer group"
+                            whileHover={{ scale: 1.1, backgroundColor: "rgba(232, 193, 82, 0.2)" }}
+                            whileTap={{ scale: 0.9 }}
+                            animate={{ boxShadow: ["0px 0px 0px rgba(232,193,82,0)", "0px 0px 20px rgba(232,193,82,0.4)", "0px 0px 0px rgba(232,193,82,0)"] }}
+                            transition={{ boxShadow: { duration: 2, repeat: Infinity } }}
+                        >
+                            <span aria-hidden="true" className="material-symbols-outlined text-primary text-5xl translate-x-1 group-hover:drop-shadow-[0_0_8px_rgba(232,193,82,0.8)] transition-all">play_arrow</span>
+                        </motion.button>
+                    </div>
                 ) : (
-                    <div className="absolute inset-0 bg-black z-20 flex items-center justify-center group cursor-pointer" onClick={togglePlay}>
-                        <video
-                            ref={videoRef}
-                            src="/videos/vsl-optimized.mp4"
-                            poster="/videos/poster.jpg"
-                            autoPlay
-                            playsInline
-                            onTimeUpdate={handleTimeUpdate}
-                            onContextMenu={(e) => e.preventDefault()}
-                            className="w-full h-full object-cover"
-                        />
-                        {/* Custom Progress Bar */}
+                    <>
+                        {/* Barra de progreso */}
                         <div className="absolute bottom-0 left-0 w-full h-1.5 bg-white/10 overflow-hidden pointer-events-none">
                             <motion.div
                                 className="h-full bg-primary glow-button"
@@ -118,20 +143,33 @@ export default function Hero() {
                             />
                         </div>
 
-                        {/* Overlay Controls (visible on hover) */}
+                        {/* Icono de play/pausa al pasar el cursor */}
                         <div className="absolute inset-0 flex items-center justify-center pointer-events-none transition-opacity duration-300 opacity-0 group-hover:opacity-100">
                             <motion.div
                                 className="size-16 rounded-full bg-black/40 backdrop-blur-sm border border-white/10 flex items-center justify-center"
                                 animate={{ scale: isPlaying ? 0.8 : 1 }}
                             >
-                                <span className="material-symbols-outlined text-white text-4xl">
-                                    {isPlaying ? 'pause' : 'play_arrow'}
+                                <span aria-hidden="true" className="material-symbols-outlined text-white text-4xl">
+                                    {isPlaying ? "pause" : "play_arrow"}
                                 </span>
                             </motion.div>
                         </div>
-                    </div>
+
+                        {/* El video pudo haber arrancado sin sonido (por scroll);
+                            este control deja activarlo con un toque. */}
+                        <button
+                            type="button"
+                            onClick={alternarSonido}
+                            aria-label={muted ? "Activar sonido" : "Silenciar video"}
+                            className="absolute bottom-4 right-4 z-10 size-10 rounded-full bg-black/60 backdrop-blur-sm border border-white/10 flex items-center justify-center text-white"
+                        >
+                            <span aria-hidden="true" className="material-symbols-outlined text-xl">
+                                {muted ? "volume_off" : "volume_up"}
+                            </span>
+                        </button>
+                    </>
                 )}
-            </motion.div>
+            </div>
 
             <motion.a
                 href="https://wa.link/fspjz8"
@@ -149,17 +187,8 @@ export default function Hero() {
                     animate={{ x: "200%" }}
                     transition={{ duration: 1.5, repeat: Infinity, repeatDelay: 3 }}
                 />
-                <span className="relative z-10 w-full flex items-center justify-center gap-2">
-                    AGENDAR ASESORÍA
-                    <motion.span
-                        className="material-symbols-outlined text-sm"
-                        animate={{ x: [0, 5, 0] }}
-                        transition={{ duration: 1.5, repeat: Infinity }}
-                    >
-                        arrow_forward
-                    </motion.span>
-                </span>
+                <span className="relative z-10">AGENDAR MI ASESORÍA</span>
             </motion.a>
-        </motion.header>
+        </header>
     );
 }

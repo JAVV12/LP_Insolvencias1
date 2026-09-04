@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "og": "node scripts/generate-og.mjs",
+    "favicon": "node scripts/generate-favicon.mjs"
   },
   "dependencies": {
     "@ffmpeg/core": "^0.12.10",
@@ -28,6 +30,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.2.1",
     "postcss": "^8.5.8",
+    "sharp": "^0.34.5",
     "tailwindcss": "^3.4.19",
     "typescript": "^5"
   }
