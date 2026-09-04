@@ -36,19 +36,19 @@ export default function Hero() {
 
     return (
         <motion.header
-            className="pt-12 pb-16 px-6 text-center overflow-hidden"
+            className="pt-20 pb-16 px-6 text-center overflow-hidden relative"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
             variants={fadeUp}
         >
             <motion.div 
-                className="flex justify-center mb-8"
+                className="absolute top-4 left-4 md:top-6 md:left-8 z-20"
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
             >
-                <div className="relative w-32 h-32 md:w-40 md:h-40">
+                <div className="relative w-20 h-20 md:w-28 md:h-28">
                     <Image src="/images/logo.webp" alt="Toro Legal Logo" fill className="object-contain drop-shadow-2xl" priority />
                 </div>
             </motion.div>
