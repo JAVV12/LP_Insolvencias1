@@ -1,12 +1,11 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 
 export default function Hero() {
     const [started, setStarted] = useState(false);
-    const [muted, setMuted] = useState(false);
     const [isPlaying, setIsPlaying] = useState(false);
     const [progress, setProgress] = useState(0);
     const videoRef = useRef<HTMLVideoElement>(null);
@@ -19,40 +18,22 @@ export default function Hero() {
     };
 
     /**
-     * Arranca la reproducción.
+     * Arranca la reproducción con sonido.
      *
      * El navegador solo permite sonido si `play()` se llama de forma síncrona
      * dentro de un gesto real del usuario (un clic): por eso el botón de play
      * llama esto directamente en su `onClick`, sin pasar por un cambio de
-     * estado que remonte el <video> — eso era lo que obligaba a pulsar play
-     * dos veces, porque el intento de reproducción automática ya no ocurría
-     * dentro del gesto de clic original y el navegador lo bloqueaba.
-     *
-     * El scroll no cuenta como gesto de usuario, así que ese camino arranca en
-     * silencio; el botón de sonido dentro del reproductor deja activarlo.
+     * estado que remonte el <video> — eso era lo que antes obligaba a pulsar
+     * play dos veces, porque el intento de reproducción ya no ocurría dentro
+     * del gesto de clic original y el navegador lo bloqueaba.
      */
-    const iniciarReproduccion = useCallback((conSonido: boolean) => {
-        const video = videoRef.current;
-        if (!video) return;
-        video.muted = !conSonido;
-        setMuted(!conSonido);
+    const iniciarReproduccion = () => {
         setStarted(true);
-        video.play().catch(() => {
+        videoRef.current?.play().catch(() => {
             // Si el navegador aun así lo bloquea, el usuario puede pulsar
             // sobre el video para intentarlo de nuevo.
         });
-    }, []);
-
-    // Arranca el video en cuanto el visitante empieza a desplazarse, para que
-    // ver la VSL no dependa de que encuentre y pulse el botón de play.
-    useEffect(() => {
-        if (started) return;
-        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-        const alPrimerScroll = () => iniciarReproduccion(false);
-        window.addEventListener("scroll", alPrimerScroll, { once: true, passive: true });
-        return () => window.removeEventListener("scroll", alPrimerScroll);
-    }, [started, iniciarReproduccion]);
+    };
 
     const togglePlay = () => {
         const video = videoRef.current;
@@ -62,13 +43,6 @@ export default function Hero() {
         } else {
             video.pause();
         }
-    };
-
-    const alternarSonido = () => {
-        const video = videoRef.current;
-        if (!video) return;
-        video.muted = !video.muted;
-        setMuted(video.muted);
     };
 
     // El hero no lleva animación de entrada a propósito: es lo primero que se
@@ -108,7 +82,6 @@ export default function Hero() {
                     src="/videos/vsl-optimized.mp4"
                     poster="/videos/poster.jpg"
                     playsInline
-                    muted={muted}
                     onClick={started ? togglePlay : undefined}
                     onTimeUpdate={handleTimeUpdate}
                     onPlay={() => setIsPlaying(true)}
@@ -121,7 +94,7 @@ export default function Hero() {
                     <div className="absolute inset-0 bg-black/60 flex items-center justify-center z-10">
                         <motion.button
                             type="button"
-                            onClick={() => iniciarReproduccion(true)}
+                            onClick={iniciarReproduccion}
                             aria-label="Reproducir video"
                             className="size-20 bg-primary/10 backdrop-blur-sm rounded-full flex items-center justify-center border border-primary/40 cursor-pointer group"
                             whileHover={{ scale: 1.1, backgroundColor: "rgba(232, 193, 82, 0.2)" }}
@@ -154,19 +127,6 @@ export default function Hero() {
                                 </span>
                             </motion.div>
                         </div>
-
-                        {/* El video pudo haber arrancado sin sonido (por scroll);
-                            este control deja activarlo con un toque. */}
-                        <button
-                            type="button"
-                            onClick={alternarSonido}
-                            aria-label={muted ? "Activar sonido" : "Silenciar video"}
-                            className="absolute bottom-4 right-4 z-10 size-10 rounded-full bg-black/60 backdrop-blur-sm border border-white/10 flex items-center justify-center text-white"
-                        >
-                            <span aria-hidden="true" className="material-symbols-outlined text-xl">
-                                {muted ? "volume_off" : "volume_up"}
-                            </span>
-                        </button>
                     </>
                 )}
             </div>
